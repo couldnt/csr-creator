@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Certificate Signing Request</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="static/css/csr.css" rel="stylesheet" media="screen">
+    <script src="static/js/jquery-2.2.1.min.js"></script>
+    <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+        (function ($) {
+            $.fn.serializeFormJSON = function () {
+
+                var o = {};
+                var a = this.serializeArray();
+                $.each(a, function () {
+                    if (o[this.name]) {
+                        if (!o[this.name].push) {
+                            o[this.name] = [o[this.name]];
+                        }
+                        o[this.name].push(this.value || '');
+                    } else {
+                        o[this.name] = this.value || '';
+                    }
+                });
+                return JSON.stringify(o);
+            };
+        })(jQuery);
+
+        $(function() {
+            $('button#btn-clear').bind('click', reset);
+            $('button#btn-generate').bind('click', generate);
+        });
+
+        function reset() {
+            $("div.csr-result").css("display", "none");
+            $('textarea#privateKey').val('');
+            $('textarea#csr').val('');
+            $('input#commonName').val('');
+            $('input#organizationalUnit').val('');
+            $('input#organization').val('');
+            $('input#location').val('');
+            $('input#state').val('');
+            $('input#country').val('');
+        }
+
+        function showPkAndCsr(jsonResult) {
+            $('textarea#privateKey').val(jsonResult.privateKey);
+            $('textarea#csr').val(jsonResult.csr);
+            $("div.csr-result").css("display", "block");
+        }
+
+        function generate() {
+            var data = $('form#csrForm').serializeFormJSON();
+            // console.log(data);
+
+            // $.getJSON($SCRIPT_ROOT + '/testJson', data, function(dataReturn) {
+            //    console.log(dataReturn);
+            // });
+
+            $.ajax({
+                type: 'POST',
+                url: $SCRIPT_ROOT + '/csr',
+                data: data,
+                success: function(dataReturn) {showPkAndCsr(dataReturn);},
+                dataType: 'json',
+                contentType: "application/json"
+            });
+        }
+    </script>
+</head>
+<body>
+<script src="static/bootstrap/js/bootstrap.min.js"></script>
+<form id="csrForm" action=".">
+<div class="container-fluid csrContainer">
+    <div class="row">
+        <div class="col-md-10 header col-md-offset-2">Certificate Signing Request</div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">&#160;</div>
+    </div>
+        <div class="row">
+            <div class="col-md-3 input_label">Domain (Common name)</div>
+            <div class="col-md-9"><input type="text" id="commonName" name="commonName" value=""/>&#160;*</div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 input_label">Department (Organizational Unit)</div>
+            <div class="col-md-9"><input type="text" id="organizationalUnit" name="organizationalUnit" value=""/></div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 input_label">Company (Organization)</div>
+            <div class="col-md-9"><input type="text" id="organization" name="organization" value=""/></div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 input_label">City (Location)</div>
+            <div class="col-md-9"><input type="text" id="location" name="location" value=""/></div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 input_label">State (State)</div>
+            <div class="col-md-9"><input type="text" id="state" name="state" value=""/></div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 input_label">Country (Country)</div>
+            <div class="col-md-9"><input type="text" id="country" name="country" value="" maxlength="2"/></div>
+        </div>
+    <div class="row">
+        <div class="col-md-12">&#160;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-9 col-md-offset-3">
+            <button type="button" id="btn-generate">Generate</button>
+            <button type="button" id="btn-clear">Clear</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">&#160;</div>
+    </div>
+    <div class="row csr-result" id="row-privateKey">
+        <div class="col-md-3 input_label">Private Key</div>
+        <div class="col-md-9"><textarea id="privateKey" rows="8" cols="60" readonly></textarea></div>
+    </div>
+    <div class="row csr-result" id="row-csr">
+        <div class="col-md-3 input_label">CSR</div>
+        <div class="col-md-9"><textarea id="csr" rows="8" cols="60" readonly></textarea></div>
+    </div>
+</div>
+</form>
+</body>
+</html>

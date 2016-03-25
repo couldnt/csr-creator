@@ -1,0 +1,45 @@
+input {
+    border-radius: 4px;
+    border: 1px solid #aaa;
+    padding: 1px 5px;
+    height: 22px;
+    min-height: 22px;
+    font-size: 12px;
+    width: 258px;
+}
+button {
+    border-radius: 4px;
+    color: #fff;
+    width: 125px;
+}
+button#btn-generate {
+    margin-left: 4px;
+    border: 1px solid #111111;
+    background-color: #009933;
+}
+button#btn-clear {
+    border: 1px solid #111111;
+    background-color: #cc0000;
+}
+textarea {
+    border-radius: 4px;
+    border: 1px solid #aaa;
+    padding: 1px 5px;
+    height: 100px;
+    min-height: 100px;
+    font-size: 12px;
+    width: 500px;
+}
+.header {
+    font-size: 24px;
+    font-weight: bold;
+}
+.input_label {
+    text-align: right;
+}
+div.csrContainer > div.row {
+    padding: 2px;
+}
+div.csr-result {
+    display: none;
+}
