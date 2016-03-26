@@ -27,3 +27,9 @@ Then, run python csr.py, you will see
 > Debugger pin code: 336-049-928
 
 Then open you browser, and visit [http://127.0.0.1:5000/csr](http://127.0.0.1:5000/csr).
+
+## Screenshots
+
+![](http://i.imgur.com/l2PlHVg.png)
+
+![](http://i.imgur.com/jC3b5Dq.png)
